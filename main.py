@@ -1,3 +1,4 @@
+# -*-coding=utf-8-*-
 import urllib.request
 import urllib.parse
 import http.cookiejar
@@ -6,10 +7,6 @@ import base64
 import re
 import sys
 import io
-
-
-
-# encoding:utf-8
 
 
 def uN():
@@ -25,7 +22,8 @@ def PM(i):
     name = uN()
     data = {'UserName': name[i], 'Password': '123', 'yzm': Bdjk(), 'Submit': '登 录', 'action': 'login'}
     post_data = urllib.parse.urlencode(data).encode('utf-8')
-    headers = {'User-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'}
+    headers = {
+        'User-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'}
     log_url = "http://61.157.243.110:4980/index.php"
     req = urllib.request.Request(log_url, headers=headers, data=post_data)
     cookie = http.cookiejar.CookieJar()
@@ -38,7 +36,22 @@ def PM(i):
     urltoken = 'http://61.157.243.110:4980/CreditSearch.php'
     req = urllib.request.Request(urltoken, headers=headers)
     resp = opener.open(req)
-    print(resp.read())
+    # zhengze = re.findall(r".*id=\"token\" value=\"(.*)\"\s/>\\", str(resp.read()))
+    stt = str(resp.read())
+    # print(zhengze)
+    stt1 = 'id="token" value='
+    stt2 = '" />'
+    stt3 = 'value="'
+    aaa = stt[stt.index(stt1):]
+    bbb = aaa[aaa.index(stt3):aaa.index(stt2)]
+    token = bbb[7:len(bbb)]
+    print(token)
+    token_data = {'UserName': name[i], 'token': token, 'action': 'save'}
+    GPAurl = 'http://61.157.243.110:4980/CreditSearch1.php'
+    req = urllib.request.Request(GPAurl, headers=headers, data=token_data)
+    req = urllib.request.Request(GPAurl, headers=headers)
+    resp = opener.open(req)
+    print(resp.read().decode('utf-8', 'ignore'))
 
 
 def Bdjk():
@@ -70,4 +83,4 @@ def jk():
         return response.json()['access_token']
 
 
-PM(1)
+PM(0)
